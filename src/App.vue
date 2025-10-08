@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components'
+import { TransferForm } from '@/features/transactions/components'
 import { Building2 } from 'lucide-vue-next'
 </script>
 
@@ -21,16 +22,31 @@ import { Building2 } from 'lucide-vue-next'
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">Account Management</h2>
-        <p class="text-gray-600">Create accounts and check balances for internal transfers</p>
-      </div>
+    <main class="container mx-auto px-4 py-8 space-y-12">
+      <!-- Account Management Section -->
+      <section>
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Account Management</h2>
+          <p class="text-gray-600">Create accounts and check balances for internal transfers</p>
+        </div>
 
-      <div class="grid gap-6 md:grid-cols-2 lg:gap-8">
-        <CreateAccountForm />
-        <AccountBalanceViewer />
-      </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:gap-8">
+          <CreateAccountForm />
+          <AccountBalanceViewer />
+        </div>
+      </section>
+
+      <!-- Transfers Section -->
+      <section>
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Internal Transfers</h2>
+          <p class="text-gray-600">Transfer funds between your accounts</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+          <TransferForm />
+        </div>
+      </section>
     </main>
   </div>
 </template>

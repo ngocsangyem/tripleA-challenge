@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
+import { useFocus } from '@vueuse/core'
 import { useAccountsStore } from '@/stores/accounts'
 import { required, accountId, moneyAmount } from '@/shared/utils/validation'
 import { LoadingSpinner } from '@/shared/ui'
@@ -35,13 +36,7 @@ const { loading } = storeToRefs(accountsStore)
 const accountIdInputRef = ref<HTMLInputElement | null>(null)
 
 // Auto-focus on first input when component mounts
-onMounted(() => {
-  setTimeout(() => {
-    if (accountIdInputRef.value && typeof accountIdInputRef.value.focus === 'function') {
-      accountIdInputRef.value.focus()
-    }
-  }, 100)
-})
+useFocus(accountIdInputRef, { initialValue: true })
 
 const { defineField, handleSubmit, errors, resetForm } = useForm({
   validationSchema: {

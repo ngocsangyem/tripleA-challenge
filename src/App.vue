@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components';
 import { TransferForm } from '@/features/transactions/components';
 import { Toaster } from '@/components/ui/sonner';
@@ -14,10 +15,19 @@ import {
 import { Building2, UserPlus, ArrowRightLeft } from 'lucide-vue-next';
 import { useUiStore } from '@/stores/ui';
 import { storeToRefs } from 'pinia';
+import ModeToggle from '@/components/ModeToggle.vue';
+import { useTheme } from '@/composables/useTheme';
 import 'vue-sonner/style.css';
 
 const uiStore = useUiStore();
 const { createAccountDialogOpen, transferDialogOpen } = storeToRefs(uiStore);
+
+const { initTheme } = useTheme();
+
+// Initialize theme on mount
+onMounted(() => {
+  initTheme();
+});
 
 const handleAccountCreated = () => {
   uiStore.closeCreateAccountDialog();
@@ -30,22 +40,21 @@ const handleTransferCompleted = () => {
 
 <template>
   <Toaster position="top-right" richColors />
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
     <!-- Header -->
-    <header class="border-b border-gray-200 bg-white shadow-sm">
+    <header class="border-b border-gray-200 dark:border-gray-700 to-gray-400 dark:bg-gray-900 shadow-sm">
       <div class="container mx-auto px-4 py-6">
         <!-- Mobile: Stack layout, Desktop: Side-by-side -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <!-- Logo and Title -->
           <div class="flex items-center gap-3">
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600"
-            >
+              class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
               <Building2 class="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">TripleA Financial</h1>
-              <p class="text-sm text-gray-600">Account Management & Transfers</p>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">TripleA Financial</h1>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Account Management & Transfers</p>
             </div>
           </div>
 
@@ -86,6 +95,9 @@ const handleTransferCompleted = () => {
                 <TransferForm @transferCompleted="handleTransferCompleted" />
               </DialogContent>
             </Dialog>
+
+            <!-- Theme Toggle -->
+            <ModeToggle />
           </div>
         </div>
       </div>
@@ -95,8 +107,8 @@ const handleTransferCompleted = () => {
     <main class="container mx-auto px-4 py-8">
       <section>
         <div class="mb-8 text-center">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Check Account Balance</h2>
-          <p class="text-gray-600">View the current balance of any account</p>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Check Account Balance</h2>
+          <p class="text-gray-600 dark:text-gray-400">View the current balance of any account</p>
         </div>
 
         <div class="max-w-xl mx-auto">

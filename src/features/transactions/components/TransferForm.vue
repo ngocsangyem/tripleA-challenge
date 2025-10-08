@@ -31,7 +31,9 @@ const sourceAccountInputRef = ref<HTMLInputElement | null>(null)
 // Auto-focus on first input when component mounts
 onMounted(() => {
   setTimeout(() => {
-    sourceAccountInputRef.value?.focus()
+    if (sourceAccountInputRef.value && typeof sourceAccountInputRef.value.focus === 'function') {
+      sourceAccountInputRef.value.focus()
+    }
   }, 100)
 })
 
@@ -108,7 +110,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <Card>
+  <Card data-cy="transfer-form-card">
     <CardHeader>
       <div class="flex items-center gap-3">
         <div
@@ -129,7 +131,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormLabel>From Account</FormLabel>
             <FormControl>
               <Input ref="sourceAccountInputRef" v-bind="{ ...componentField, ...sourceAccountAttrs }" v-model="sourceAccountField" type="text"
-                placeholder="e.g., 123" :disabled="loading" />
+                placeholder="e.g., 123" :disabled="loading" data-cy="transfer-form-source-account-input" />
             </FormControl>
             <FormDescription>Account ID to transfer funds from</FormDescription>
             <FormMessage />
@@ -141,7 +143,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormLabel>To Account</FormLabel>
             <FormControl>
               <Input v-bind="{ ...componentField, ...destinationAccountAttrs }" v-model="destinationAccountField"
-                type="text" placeholder="e.g., 456" :disabled="loading" />
+                type="text" placeholder="e.g., 456" :disabled="loading" data-cy="transfer-form-destination-account-input" />
             </FormControl>
             <FormDescription>Account ID to receive the funds</FormDescription>
             <FormMessage />
@@ -153,7 +155,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormLabel>Amount</FormLabel>
             <FormControl>
               <Input v-bind="{ ...componentField, ...amountAttrs }" v-model="amountField" type="text"
-                placeholder="e.g., 100.00" :disabled="loading" />
+                placeholder="e.g., 100.00" :disabled="loading" data-cy="transfer-form-amount-input" />
             </FormControl>
             <FormDescription>Amount to transfer (decimal format)</FormDescription>
             <FormMessage />
@@ -163,7 +165,7 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit">
+      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit" data-cy="transfer-form-submit-button">
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Transfer Funds</span>
       </Button>

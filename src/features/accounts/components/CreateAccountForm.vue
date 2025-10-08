@@ -29,7 +29,9 @@ const accountIdInputRef = ref<HTMLInputElement | null>(null)
 // Auto-focus on first input when component mounts
 onMounted(() => {
   setTimeout(() => {
-    accountIdInputRef.value?.focus()
+    if (accountIdInputRef.value && typeof accountIdInputRef.value.focus === 'function') {
+      accountIdInputRef.value.focus()
+    }
   }, 100)
 })
 
@@ -70,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <Card>
+  <Card data-cy="create-account-form-card">
     <CardHeader>
       <CardTitle class="text-2xl">Create Account</CardTitle>
       <CardDescription>Set up a new account with an initial balance</CardDescription>
@@ -89,6 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
                 type="text"
                 placeholder="e.g., 123"
                 :disabled="loading"
+                data-cy="create-account-form-account-id-input"
               />
             </FormControl>
             <FormDescription>Unique identifier for the account (positive integer)</FormDescription>
@@ -106,6 +109,7 @@ const onSubmit = handleSubmit(async (values) => {
                 type="text"
                 placeholder="e.g., 1000.00"
                 :disabled="loading"
+                data-cy="create-account-form-initial-balance-input"
               />
             </FormControl>
             <FormDescription>Starting balance amount (decimal format)</FormDescription>
@@ -116,7 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit">
+      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit" data-cy="create-account-form-submit-button">
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Create Account</span>
       </Button>

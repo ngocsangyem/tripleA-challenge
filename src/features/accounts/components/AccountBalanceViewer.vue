@@ -63,7 +63,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <Card>
+  <Card data-cy="account-balance-viewer-card">
     <CardHeader>
       <CardTitle class="text-2xl">Check Balance</CardTitle>
       <CardDescription>View the current balance of any account</CardDescription>
@@ -82,6 +82,7 @@ const onSubmit = handleSubmit(async (values) => {
                 type="text"
                 placeholder="e.g., 123"
                 :disabled="loading"
+                data-cy="account-balance-viewer-account-id-input"
               />
             </FormControl>
             <FormDescription>Enter an account ID to view its balance</FormDescription>
@@ -100,6 +101,7 @@ const onSubmit = handleSubmit(async (values) => {
           <div
             v-if="account"
             class="rounded-lg border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 shadow-sm"
+            data-cy="account-balance-viewer-balance-display"
           >
             <div class="flex items-center gap-3 mb-2">
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 shadow-md">
@@ -118,7 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit">
+      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit" data-cy="account-balance-viewer-submit-button">
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Check Balance</span>
       </Button>

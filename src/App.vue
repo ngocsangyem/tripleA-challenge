@@ -33,9 +33,12 @@ const handleTransferCompleted = () => {
     <!-- Header -->
     <header class="border-b border-gray-200 bg-white shadow-sm">
       <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center justify-between">
+        <!-- Mobile: Stack layout, Desktop: Side-by-side -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Logo and Title -->
           <div class="flex items-center gap-3">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
               <Building2 class="h-6 w-6 text-white" />
             </div>
             <div>
@@ -45,7 +48,7 @@ const handleTransferCompleted = () => {
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex items-center gap-3">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <!-- Create Account Dialog -->
             <Dialog v-model:open="createAccountDialogOpen">
               <DialogTrigger as-child>

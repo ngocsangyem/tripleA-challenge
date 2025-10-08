@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
-import { createAccount } from '@/shared/api'
+import { useAccountsStore } from '@/stores/accounts'
 import { required, accountId, moneyAmount } from '@/shared/utils/validation'
 import { LoadingSpinner } from '@/shared/ui'
 import { Button } from '@/components/ui/button'
@@ -23,10 +23,14 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form'
+import { storeToRefs } from 'pinia'
 
 const emit = defineEmits<{
   accountCreated: []
 }>()
+
+const accountsStore = useAccountsStore()
+const { loading } = storeToRefs(accountsStore)
 
 const accountIdInputRef = ref<HTMLInputElement | null>(null)
 
@@ -39,8 +43,6 @@ onMounted(() => {
   }, 100)
 })
 
-const loading = ref(false)
-
 const { defineField, handleSubmit, errors, resetForm } = useForm({
   validationSchema: {
     account_id: [required, accountId],
@@ -52,10 +54,8 @@ const [accountIdField, accountIdAttrs] = defineField('account_id')
 const [initialBalanceField, initialBalanceAttrs] = defineField('initial_balance')
 
 const onSubmit = handleSubmit(async (values) => {
-  loading.value = true
-
   try {
-    const account = await createAccount({
+    const account = await accountsStore.createAccount({
       account_id: Number(values.account_id),
       initial_balance: values.initial_balance,
     })
@@ -70,8 +70,6 @@ const onSubmit = handleSubmit(async (values) => {
     toast.error('Failed to create account', {
       description: err.message || 'An error occurred while creating the account',
     })
-  } finally {
-    loading.value = false
   }
 })
 </script>

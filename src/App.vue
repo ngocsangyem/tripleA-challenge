@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components'
 import { TransferForm } from '@/features/transactions/components'
 import { Toaster } from '@/components/ui/sonner'
@@ -13,17 +12,19 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Building2, UserPlus, ArrowRightLeft } from 'lucide-vue-next'
+import { useUiStore } from '@/stores/ui'
+import { storeToRefs } from 'pinia'
 import 'vue-sonner/style.css'
 
-const createAccountDialogOpen = ref(false)
-const transferDialogOpen = ref(false)
+const uiStore = useUiStore()
+const { createAccountDialogOpen, transferDialogOpen } = storeToRefs(uiStore)
 
 const handleAccountCreated = () => {
-  createAccountDialogOpen.value = false
+  uiStore.closeCreateAccountDialog()
 }
 
 const handleTransferCompleted = () => {
-  transferDialogOpen.value = false
+  uiStore.closeTransferDialog()
 }
 </script>
 

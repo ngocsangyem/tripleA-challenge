@@ -1,11 +1,6 @@
 /// <reference types="cypress" />
 
 /**
- * Custom Cypress Commands for TripleA Financial Application
- * Following best practices from Cypress documentation
- */
-
-/**
  * Generate a unique account ID using timestamp
  * This helps avoid conflicts in tests since the backend persists data
  */
@@ -30,18 +25,28 @@ Cypress.Commands.add('getBySelLike', (selector: string, ...args) => {
 })
 
 /**
- * Create a new account via UI
+ * Create a new account via UI (opens dialog, fills form, submits)
  * @param accountId - Account ID (positive integer)
  * @param initialBalance - Initial balance (decimal string)
  */
 Cypress.Commands.add('createAccount', (accountId: string, initialBalance: string) => {
-  cy.getBySel('create-account-form-account-id-input').clear().type(accountId)
-  cy.getBySel('create-account-form-initial-balance-input').clear().type(initialBalance)
+  // Open create account dialog (force click to avoid toast coverage)
+  cy.getBySel('open-create-account-dialog').click({ force: true })
+  cy.wait(300) // Allow dialog to open
+  
+  // Wait for form to be visible (dialog opens)
+  cy.getBySel('create-account-form-account-id-input', { timeout: 5000 }).should('be.visible')
+  
+  // Fill and submit form
+  cy.getBySel('create-account-form-account-id-input').type(accountId)
+  cy.getBySel('create-account-form-initial-balance-input').type(initialBalance)
   cy.getBySel('create-account-form-submit-button').click()
   
-  // Wait for success toast
+  // Wait for success toast and dialog to close
   cy.contains('Account created successfully!', { timeout: 10000 }).should('be.visible')
-  cy.wait(2000) // Allow toast to settle
+  cy.wait(500) // Allow dialog close animation
+  cy.getBySel('create-account-form-account-id-input').should('not.exist')
+  cy.wait(2000) // Allow toast to fully disappear
 })
 
 /**
@@ -60,7 +65,7 @@ Cypress.Commands.add('checkBalance', (accountId: string, expectedBalance?: strin
 })
 
 /**
- * Transfer funds between accounts via UI
+ * Transfer funds between accounts via UI (opens dialog, fills form, submits)
  * @param sourceAccountId - Source account ID
  * @param destinationAccountId - Destination account ID
  * @param amount - Amount to transfer
@@ -70,14 +75,24 @@ Cypress.Commands.add('transferFunds', (
   destinationAccountId: string,
   amount: string
 ) => {
-  cy.getBySel('transfer-form-source-account-input').clear().type(sourceAccountId)
-  cy.getBySel('transfer-form-destination-account-input').clear().type(destinationAccountId)
-  cy.getBySel('transfer-form-amount-input').clear().type(amount)
+  // Open transfer dialog (force click to avoid toast coverage)
+  cy.getBySel('open-transfer-dialog').click({ force: true })
+  cy.wait(300) // Allow dialog to open
+  
+  // Wait for form to be visible (dialog opens)
+  cy.getBySel('transfer-form-source-account-input', { timeout: 5000 }).should('be.visible')
+  
+  // Fill and submit form
+  cy.getBySel('transfer-form-source-account-input').type(sourceAccountId)
+  cy.getBySel('transfer-form-destination-account-input').type(destinationAccountId)
+  cy.getBySel('transfer-form-amount-input').type(amount)
   cy.getBySel('transfer-form-submit-button').click()
   
-  // Wait for success toast
+  // Wait for success toast and dialog to close
   cy.contains('Transfer completed successfully!', { timeout: 10000 }).should('be.visible')
-  cy.wait(2000) // Allow toast to settle
+  cy.wait(500) // Allow dialog close animation
+  cy.getBySel('transfer-form-source-account-input').should('not.exist')
+  cy.wait(2000) // Allow toast to fully disappear
 })
 
 /**

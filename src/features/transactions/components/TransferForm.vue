@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
-import { executeTransfer } from '@/shared/api'
+import { useTransactionsStore } from '@/stores/transactions'
 import { required, accountId, moneyAmount } from '@/shared/utils/validation'
 import { formatMoney } from '@/shared/utils'
 import { LoadingSpinner } from '@/shared/ui'
@@ -21,10 +21,14 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form'
+import { storeToRefs } from 'pinia'
 
 const emit = defineEmits<{
   transferCompleted: []
 }>()
+
+const transactionsStore = useTransactionsStore()
+const { loading } = storeToRefs(transactionsStore)
 
 const sourceAccountInputRef = ref<HTMLInputElement | null>(null)
 
@@ -36,8 +40,6 @@ onMounted(() => {
     }
   }, 100)
 })
-
-const loading = ref(false)
 
 const { defineField, handleSubmit, resetForm } = useForm({
   validationSchema: {
@@ -77,8 +79,6 @@ const onSubmit = handleSubmit(async (values) => {
     return
   }
 
-  loading.value = true
-
   // Save the transfer details BEFORE making API call and resetting form
   const transferDetails = {
     source: Number(values.source_account_id),
@@ -87,7 +87,7 @@ const onSubmit = handleSubmit(async (values) => {
   }
 
   try {
-    await executeTransfer({
+    await transactionsStore.executeTransfer({
       source_account_id: transferDetails.source,
       destination_account_id: transferDetails.destination,
       amount: transferDetails.amount,
@@ -104,8 +104,6 @@ const onSubmit = handleSubmit(async (values) => {
     toast.error('Transfer failed', {
       description: err.message || 'An error occurred while processing the transfer',
     })
-  } finally {
-    loading.value = false
   }
 })
 </script>

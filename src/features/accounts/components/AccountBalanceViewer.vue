@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
-import { getAccountBalance } from '@/shared/api'
+import { useAccountsStore } from '@/stores/accounts'
 import { required, accountId } from '@/shared/utils/validation'
 import { formatMoney } from '@/shared/utils'
 import { LoadingSpinner } from '@/shared/ui'
@@ -22,11 +22,13 @@ import {
   FormDescription,
 } from '@/components/ui/form'
 import { Wallet } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import type { Account } from '@/shared/types'
 
-const accountIdInputRef = ref<HTMLInputElement | null>(null)
+const accountsStore = useAccountsStore()
+const { loading } = storeToRefs(accountsStore)
 
-const loading = ref(false)
+const accountIdInputRef = ref<HTMLInputElement | null>(null)
 const account = ref<Account | null>(null)
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -38,11 +40,10 @@ const { defineField, handleSubmit, errors } = useForm({
 const [accountIdField, accountIdAttrs] = defineField('account_id')
 
 const onSubmit = handleSubmit(async (values) => {
-  loading.value = true
   account.value = null
 
   try {
-    const result = await getAccountBalance(Number(values.account_id))
+    const result = await accountsStore.fetchAccountBalance(Number(values.account_id))
     account.value = result
 
     toast.success('Balance retrieved successfully', {
@@ -53,8 +54,6 @@ const onSubmit = handleSubmit(async (values) => {
     toast.error('Failed to retrieve balance', {
       description: err.message || 'Account not found or an error occurred',
     })
-  } finally {
-    loading.value = false
   }
 })
 </script>

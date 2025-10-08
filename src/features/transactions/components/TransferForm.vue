@@ -9,11 +9,7 @@ import { formatMoney } from '@/shared/utils'
 import { LoadingSpinner } from '@/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   FormControl,
   FormField,
@@ -95,9 +91,9 @@ const onSubmit = handleSubmit(async (values) => {
     // Reset form after successful transfer
     resetForm()
     emit('transferCompleted')
-  } catch (err: any) {
+  } catch (err: unknown) {
     toast.error('Transfer failed', {
-      description: err.message || 'An error occurred while processing the transfer',
+      description: (err as Error).message || 'An error occurred while processing the transfer',
     })
   }
 })
@@ -111,9 +107,15 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>From Account</FormLabel>
             <FormControl>
-              <Input ref="sourceAccountInputRef" v-bind="{ ...componentField, ...sourceAccountAttrs }"
-                v-model="sourceAccountField" type="text" placeholder="e.g., 123" :disabled="loading"
-                data-cy="transfer-form-source-account-input" />
+              <Input
+                ref="sourceAccountInputRef"
+                v-bind="{ ...componentField, ...sourceAccountAttrs }"
+                v-model="sourceAccountField"
+                type="text"
+                placeholder="e.g., 123"
+                :disabled="loading"
+                data-cy="transfer-form-source-account-input"
+              />
             </FormControl>
             <FormDescription>Account ID to transfer funds from</FormDescription>
             <FormMessage />
@@ -124,9 +126,14 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>To Account</FormLabel>
             <FormControl>
-              <Input v-bind="{ ...componentField, ...destinationAccountAttrs }" v-model="destinationAccountField"
-                type="text" placeholder="e.g., 456" :disabled="loading"
-                data-cy="transfer-form-destination-account-input" />
+              <Input
+                v-bind="{ ...componentField, ...destinationAccountAttrs }"
+                v-model="destinationAccountField"
+                type="text"
+                placeholder="e.g., 456"
+                :disabled="loading"
+                data-cy="transfer-form-destination-account-input"
+              />
             </FormControl>
             <FormDescription>Account ID to receive the funds</FormDescription>
             <FormMessage />
@@ -137,8 +144,14 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Amount</FormLabel>
             <FormControl>
-              <Input v-bind="{ ...componentField, ...amountAttrs }" v-model="amountField" type="text"
-                placeholder="e.g., 100.00" :disabled="loading" data-cy="transfer-form-amount-input" />
+              <Input
+                v-bind="{ ...componentField, ...amountAttrs }"
+                v-model="amountField"
+                type="text"
+                placeholder="e.g., 100.00"
+                :disabled="loading"
+                data-cy="transfer-form-amount-input"
+              />
             </FormControl>
             <FormDescription>Amount to transfer (decimal format)</FormDescription>
             <FormMessage />
@@ -148,7 +161,13 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit" data-cy="transfer-form-submit-button">
+      <Button
+        type="submit"
+        :disabled="loading"
+        class="w-full"
+        @click="onSubmit"
+        data-cy="transfer-form-submit-button"
+      >
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Transfer Funds</span>
       </Button>

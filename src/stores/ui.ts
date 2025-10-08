@@ -53,12 +53,12 @@ export const useUiStore = defineStore('ui', () => {
     // Dialog states
     createAccountDialogOpen,
     transferDialogOpen,
-    
+
     // Loading states
     isCreatingAccount,
     isFetchingBalance,
     isTransferring,
-    
+
     // Dialog actions
     openCreateAccountDialog,
     closeCreateAccountDialog,
@@ -66,7 +66,7 @@ export const useUiStore = defineStore('ui', () => {
     closeTransferDialog,
     toggleCreateAccountDialog,
     toggleTransferDialog,
-    
+
     // Loading actions
     setCreatingAccount,
     setFetchingBalance,

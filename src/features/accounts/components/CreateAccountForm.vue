@@ -8,14 +8,7 @@ import { required, accountId, moneyAmount } from '@/shared/utils/validation'
 import { LoadingSpinner } from '@/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-  CardDescription,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   FormControl,
   FormField,
@@ -38,7 +31,7 @@ const accountIdInputRef = ref<HTMLInputElement | null>(null)
 // Auto-focus on first input when component mounts
 useFocus(accountIdInputRef, { initialValue: true })
 
-const { defineField, handleSubmit, errors, resetForm } = useForm({
+const { defineField, handleSubmit, resetForm } = useForm({
   validationSchema: {
     account_id: [required, accountId],
     initial_balance: [required, moneyAmount],
@@ -61,9 +54,9 @@ const onSubmit = handleSubmit(async (values) => {
 
     resetForm()
     emit('accountCreated')
-  } catch (err: any) {
+  } catch (err: unknown) {
     toast.error('Failed to create account', {
-      description: err.message || 'An error occurred while creating the account',
+      description: (err as Error).message || 'An error occurred while creating the account',
     })
   }
 })
@@ -77,9 +70,15 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Account ID</FormLabel>
             <FormControl>
-              <Input ref="accountIdInputRef" v-bind="{ ...componentField, ...accountIdAttrs }" v-model="accountIdField"
-                type="text" placeholder="e.g., 123" :disabled="loading"
-                data-cy="create-account-form-account-id-input" />
+              <Input
+                ref="accountIdInputRef"
+                v-bind="{ ...componentField, ...accountIdAttrs }"
+                v-model="accountIdField"
+                type="text"
+                placeholder="e.g., 123"
+                :disabled="loading"
+                data-cy="create-account-form-account-id-input"
+              />
             </FormControl>
             <FormDescription>Unique identifier for the account (positive integer)</FormDescription>
             <FormMessage />
@@ -90,8 +89,14 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Initial Balance</FormLabel>
             <FormControl>
-              <Input v-bind="{ ...componentField, ...initialBalanceAttrs }" v-model="initialBalanceField" type="text"
-                placeholder="e.g., 1000.00" :disabled="loading" data-cy="create-account-form-initial-balance-input" />
+              <Input
+                v-bind="{ ...componentField, ...initialBalanceAttrs }"
+                v-model="initialBalanceField"
+                type="text"
+                placeholder="e.g., 1000.00"
+                :disabled="loading"
+                data-cy="create-account-form-initial-balance-input"
+              />
             </FormControl>
             <FormDescription>Starting balance amount (decimal format)</FormDescription>
             <FormMessage />
@@ -101,8 +106,13 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit"
-        data-cy="create-account-form-submit-button">
+      <Button
+        type="submit"
+        :disabled="loading"
+        class="w-full"
+        @click="onSubmit"
+        data-cy="create-account-form-submit-button"
+      >
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Create Account</span>
       </Button>

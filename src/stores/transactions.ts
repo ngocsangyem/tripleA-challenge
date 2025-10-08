@@ -19,7 +19,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
   const getTransactionsByAccount = computed(() => {
     return (accountId: number): Transaction[] => {
       return transactions.value.filter(
-        (t) => t.source_account_id === accountId || t.destination_account_id === accountId
+        (t) => t.source_account_id === accountId || t.destination_account_id === accountId,
       )
     }
   })
@@ -32,7 +32,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
     try {
       const transaction = await executeTransferApi(payload)
       transactions.value.push(transaction)
-      
+
       // Optimistically update balances
       const sourceAccount = accountsStore.getAccount(payload.source_account_id)
       const destAccount = accountsStore.getAccount(payload.destination_account_id)
@@ -52,8 +52,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
       }
 
       return transaction
-    } catch (err: any) {
-      error.value = err.message || 'Failed to execute transfer'
+    } catch (err: unknown) {
+      error.value = (err as Error).message || 'Failed to execute transfer'
       throw err
     } finally {
       loading.value = false

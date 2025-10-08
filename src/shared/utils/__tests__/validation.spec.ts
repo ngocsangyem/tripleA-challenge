@@ -41,7 +41,7 @@ describe('Validation Rules', () => {
 
     it('should fail for non-string values', () => {
       expect(moneyAmount(100)).toBe('Amount must be a valid number')
-      expect(moneyAmount(100.50)).toBe('Amount must be a valid number')
+      expect(moneyAmount(100.5)).toBe('Amount must be a valid number')
     })
 
     it('should fail for invalid money formats', () => {
@@ -128,10 +128,10 @@ describe('Validation Rules', () => {
     it('should work with different reference values', () => {
       const validator1 = differentFrom('100')
       const validator2 = differentFrom('200')
-      
+
       expect(validator1('100')).toBe('Source and destination accounts must be different')
       expect(validator1('200')).toBe(true)
-      
+
       expect(validator2('200')).toBe('Source and destination accounts must be different')
       expect(validator2('100')).toBe(true)
     })

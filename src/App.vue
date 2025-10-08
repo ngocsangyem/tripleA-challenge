@@ -39,7 +39,8 @@ const handleTransferCompleted = () => {
           <!-- Logo and Title -->
           <div class="flex items-center gap-3">
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
+              class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600"
+            >
               <Building2 class="h-6 w-6 text-white" />
             </div>
             <div>
@@ -80,9 +81,7 @@ const handleTransferCompleted = () => {
               <DialogContent class="sm:max-w-[500px]" data-cy="transfer-dialog">
                 <DialogHeader>
                   <DialogTitle>Transfer Funds</DialogTitle>
-                  <DialogDescription>
-                    Move money between your accounts
-                  </DialogDescription>
+                  <DialogDescription> Move money between your accounts </DialogDescription>
                 </DialogHeader>
                 <TransferForm @transferCompleted="handleTransferCompleted" />
               </DialogContent>

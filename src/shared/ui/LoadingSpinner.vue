@@ -24,10 +24,7 @@ const sizeClasses = computed(() => {
 <template>
   <div class="flex items-center justify-center gap-2">
     <div
-      :class="[
-        'animate-spin rounded-full border-primary border-t-transparent',
-        sizeClasses,
-      ]"
+      :class="['animate-spin rounded-full border-primary border-t-transparent', sizeClasses]"
       role="status"
       aria-label="Loading"
     />

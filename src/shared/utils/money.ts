@@ -5,11 +5,11 @@
  */
 export const formatMoney = (value: string): string => {
   const numValue = parseFloat(value)
-  
+
   if (isNaN(numValue)) {
     return '$0.00'
   }
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -27,17 +27,17 @@ export const isValidMoneyAmount = (value: string): boolean => {
   if (!value || value.trim() === '') {
     return false
   }
-  
+
   // Match positive decimal numbers with optional decimal places
   // Must have digits after decimal point if decimal exists
   const moneyRegex = /^\d+(\.\d+)?$/
-  
+
   if (!moneyRegex.test(value.trim())) {
     return false
   }
-  
+
   const numValue = parseFloat(value)
-  
+
   // Must be a valid number and positive
   return !isNaN(numValue) && numValue > 0
 }
@@ -51,16 +51,16 @@ export const parseMoneyInput = (input: string): string => {
   if (!input) {
     return ''
   }
-  
+
   // Remove any non-numeric characters except decimal point
   const cleaned = input.replace(/[^\d.]/g, '')
-  
+
   // Ensure only one decimal point
   const parts = cleaned.split('.')
   if (parts.length > 2) {
     return parts[0] + '.' + parts.slice(1).join('')
   }
-  
+
   return cleaned
 }
 
@@ -83,12 +83,12 @@ export const isValidAccountId = (value: string): boolean => {
   if (!value || value.trim() === '') {
     return false
   }
-  
+
   // Check if the string contains a decimal point - account IDs must be integers
   if (value.includes('.')) {
     return false
   }
-  
+
   const numValue = parseInt(value, 10)
   return !isNaN(numValue) && numValue > 0 && Number.isInteger(numValue)
 }

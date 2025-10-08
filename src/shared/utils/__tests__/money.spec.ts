@@ -150,7 +150,5 @@ describe('Money Utilities', () => {
       expect(isValidAccountId('   ')).toBe(false)
       expect(isValidAccountId('abc')).toBe(false)
     })
-
-
   })
 })

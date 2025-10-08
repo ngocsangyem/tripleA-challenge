@@ -32,8 +32,8 @@ export const useAccountsStore = defineStore('accounts', () => {
       const account = await createAccountApi(payload)
       accounts.value.set(account.account_id, account)
       return account
-    } catch (err: any) {
-      error.value = err.message || 'Failed to create account'
+    } catch (err: unknown) {
+      error.value = (err as Error).message || 'Failed to create account'
       throw err
     } finally {
       loading.value = false
@@ -48,8 +48,8 @@ export const useAccountsStore = defineStore('accounts', () => {
       const account = await getAccountBalance(accountId)
       accounts.value.set(account.account_id, account)
       return account
-    } catch (err: any) {
-      error.value = err.message || 'Failed to fetch account balance'
+    } catch (err: unknown) {
+      error.value = (err as Error).message || 'Failed to fetch account balance'
       throw err
     } finally {
       loading.value = false

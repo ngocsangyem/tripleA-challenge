@@ -10,15 +10,15 @@ export const moneyAmount = (value: unknown): string | boolean => {
   if (!value) {
     return 'Amount is required'
   }
-  
+
   if (typeof value !== 'string') {
     return 'Amount must be a valid number'
   }
-  
+
   if (!isValidMoneyAmount(value)) {
     return 'Please enter a valid amount (e.g., 100.50)'
   }
-  
+
   return true
 }
 
@@ -29,15 +29,15 @@ export const accountId = (value: unknown): string | boolean => {
   if (!value) {
     return 'Account ID is required'
   }
-  
+
   if (typeof value !== 'string') {
     return 'Account ID must be a valid number'
   }
-  
+
   if (!isValidAccountId(value)) {
     return 'Please enter a valid account ID (positive integer)'
   }
-  
+
   return true
 }
 
@@ -49,11 +49,11 @@ export const differentFrom = (otherValue: string) => {
     if (typeof value !== 'string') {
       return 'Invalid value'
     }
-    
+
     if (value === otherValue) {
       return 'Source and destination accounts must be different'
     }
-    
+
     return true
   }
 }

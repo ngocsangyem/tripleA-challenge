@@ -31,14 +31,7 @@ const handleRetry = (): void => {
     <AlertTitle>{{ title }}</AlertTitle>
     <AlertDescription class="flex items-center justify-between gap-4">
       <span>{{ message }}</span>
-      <Button
-        v-if="showRetry"
-        variant="outline"
-        size="sm"
-        @click="handleRetry"
-      >
-        Retry
-      </Button>
+      <Button v-if="showRetry" variant="outline" size="sm" @click="handleRetry"> Retry </Button>
     </AlertDescription>
   </Alert>
 </template>

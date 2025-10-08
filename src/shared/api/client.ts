@@ -29,7 +29,7 @@ const createApiClient = (): AxiosInstance => {
     },
     (error: AxiosError) => {
       return Promise.reject(transformError(error))
-    }
+    },
   )
 
   return client
@@ -75,15 +75,15 @@ const extractErrorMessage = (data: unknown): string => {
 
   if (typeof data === 'object' && data !== null) {
     const errorData = data as Record<string, unknown>
-    
+
     if (typeof errorData.message === 'string') {
       return errorData.message
     }
-    
+
     if (typeof errorData.error === 'string') {
       return errorData.error
     }
-    
+
     if (typeof errorData.detail === 'string') {
       return errorData.detail
     }

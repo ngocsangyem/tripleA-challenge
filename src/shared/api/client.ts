@@ -1,7 +1,12 @@
 import axios, { type AxiosInstance, type AxiosError, type AxiosResponse } from 'axios'
 import type { ApiError } from '@/shared/types'
 
-const API_BASE_URL = 'http://localhost:8860'
+/**
+ * API base URL
+ * - In development: Uses Vite proxy (/api) to avoid CORS issues
+ * - In production: Uses environment variable or defaults to relative path
+ */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 /**
  * Create axios instance with base configuration

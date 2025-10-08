@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components'
-import { TransferForm } from '@/features/transactions/components'
-import { Toaster } from '@/components/ui/sonner'
-import { Button } from '@/components/ui/button'
+import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components';
+import { TransferForm } from '@/features/transactions/components';
+import { Toaster } from '@/components/ui/sonner';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,22 +10,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Building2, UserPlus, ArrowRightLeft } from 'lucide-vue-next'
-import { useUiStore } from '@/stores/ui'
-import { storeToRefs } from 'pinia'
-import 'vue-sonner/style.css'
+} from '@/components/ui/dialog';
+import { Building2, UserPlus, ArrowRightLeft } from 'lucide-vue-next';
+import { useUiStore } from '@/stores/ui';
+import { storeToRefs } from 'pinia';
+import 'vue-sonner/style.css';
 
-const uiStore = useUiStore()
-const { createAccountDialogOpen, transferDialogOpen } = storeToRefs(uiStore)
+const uiStore = useUiStore();
+const { createAccountDialogOpen, transferDialogOpen } = storeToRefs(uiStore);
 
 const handleAccountCreated = () => {
-  uiStore.closeCreateAccountDialog()
-}
+  uiStore.closeCreateAccountDialog();
+};
 
 const handleTransferCompleted = () => {
-  uiStore.closeTransferDialog()
-}
+  uiStore.closeTransferDialog();
+};
 </script>
 
 <template>

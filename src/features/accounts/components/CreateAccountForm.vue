@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useForm } from 'vee-validate'
-import { toast } from 'vue-sonner'
-import { useFocus } from '@vueuse/core'
-import { useAccountsStore } from '@/stores/accounts'
-import { required, accountId, moneyAmount } from '@/shared/utils/validation'
-import { LoadingSpinner } from '@/shared/ui'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { ref } from 'vue';
+import { useForm } from 'vee-validate';
+import { toast } from 'vue-sonner';
+import { useFocus } from '@vueuse/core';
+import { useAccountsStore } from '@/stores/accounts';
+import { required, accountId, moneyAmount } from '@/shared/utils/validation';
+import { LoadingSpinner } from '@/shared/ui';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import {
   FormControl,
   FormField,
@@ -16,50 +16,50 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from '@/components/ui/form'
-import { storeToRefs } from 'pinia'
+} from '@/components/ui/form';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits<{
-  accountCreated: []
-}>()
+  accountCreated: [];
+}>();
 
-const accountsStore = useAccountsStore()
-const { loading } = storeToRefs(accountsStore)
+const accountsStore = useAccountsStore();
+const { loading } = storeToRefs(accountsStore);
 
-const accountIdInputRef = ref<HTMLInputElement | null>(null)
+const accountIdInputRef = ref<HTMLInputElement | null>(null);
 
 // Auto-focus on first input when component mounts
-useFocus(accountIdInputRef, { initialValue: true })
+useFocus(accountIdInputRef, { initialValue: true });
 
 const { defineField, handleSubmit, resetForm } = useForm({
   validationSchema: {
     account_id: [required, accountId],
     initial_balance: [required, moneyAmount],
   },
-})
+});
 
-const [accountIdField, accountIdAttrs] = defineField('account_id')
-const [initialBalanceField, initialBalanceAttrs] = defineField('initial_balance')
+const [accountIdField, accountIdAttrs] = defineField('account_id');
+const [initialBalanceField, initialBalanceAttrs] = defineField('initial_balance');
 
 const onSubmit = handleSubmit(async (values) => {
   try {
     const account = await accountsStore.createAccount({
       account_id: Number(values.account_id),
       initial_balance: values.initial_balance,
-    })
+    });
 
     toast.success('Account created successfully!', {
       description: `Account #${account.account_id} created with balance of $${account.balance}`,
-    })
+    });
 
-    resetForm()
-    emit('accountCreated')
+    resetForm();
+    emit('accountCreated');
   } catch (err: unknown) {
     toast.error('Failed to create account', {
       description: (err as Error).message || 'An error occurred while creating the account',
-    })
+    });
   }
-})
+});
 </script>
 
 <template>

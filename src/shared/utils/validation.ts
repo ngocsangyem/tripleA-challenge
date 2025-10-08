@@ -1,45 +1,45 @@
-import { isValidMoneyAmount, isValidAccountId } from './money'
-import { required as requiredRule } from '@vee-validate/rules'
+import { isValidMoneyAmount, isValidAccountId } from './money';
+import { required as requiredRule } from '@vee-validate/rules';
 
-export const required = requiredRule
+export const required = requiredRule;
 
 /**
  * Validates that the value is a positive decimal number in string format
  */
 export const moneyAmount = (value: unknown): string | boolean => {
   if (!value) {
-    return 'Amount is required'
+    return 'Amount is required';
   }
 
   if (typeof value !== 'string') {
-    return 'Amount must be a valid number'
+    return 'Amount must be a valid number';
   }
 
   if (!isValidMoneyAmount(value)) {
-    return 'Please enter a valid amount (e.g., 100.50)'
+    return 'Please enter a valid amount (e.g., 100.50)';
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * Validates that the value is a positive integer in string format
  */
 export const accountId = (value: unknown): string | boolean => {
   if (!value) {
-    return 'Account ID is required'
+    return 'Account ID is required';
   }
 
   if (typeof value !== 'string') {
-    return 'Account ID must be a valid number'
+    return 'Account ID must be a valid number';
   }
 
   if (!isValidAccountId(value)) {
-    return 'Please enter a valid account ID (positive integer)'
+    return 'Please enter a valid account ID (positive integer)';
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * Used for transfer validation (source !== destination)
@@ -47,13 +47,13 @@ export const accountId = (value: unknown): string | boolean => {
 export const differentFrom = (otherValue: string) => {
   return (value: unknown): string | boolean => {
     if (typeof value !== 'string') {
-      return 'Invalid value'
+      return 'Invalid value';
     }
 
     if (value === otherValue) {
-      return 'Source and destination accounts must be different'
+      return 'Source and destination accounts must be different';
     }
 
-    return true
-  }
-}
+    return true;
+  };
+};

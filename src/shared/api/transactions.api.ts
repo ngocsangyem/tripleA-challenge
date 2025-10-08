@@ -1,5 +1,5 @@
-import { apiClient } from './client'
-import type { Transaction } from '@/shared/types'
+import { apiClient } from './client';
+import type { Transaction } from '@/shared/types';
 
 /**
  * Execute an internal transfer between accounts
@@ -7,6 +7,6 @@ import type { Transaction } from '@/shared/types'
  * @returns Executed transaction details
  */
 export const executeTransfer = async (payload: Transaction): Promise<Transaction> => {
-  const response = await apiClient.post<Transaction>('/transactions', payload)
-  return response.data
-}
+  const response = await apiClient.post<Transaction>('/transactions', payload);
+  return response.data;
+};

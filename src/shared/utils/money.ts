@@ -4,10 +4,10 @@
  * @returns Formatted string (e.g., "$100.23")
  */
 export const formatMoney = (value: string): string => {
-  const numValue = parseFloat(value)
+  const numValue = parseFloat(value);
 
   if (isNaN(numValue)) {
-    return '$0.00'
+    return '$0.00';
   }
 
   return new Intl.NumberFormat('en-US', {
@@ -15,8 +15,8 @@ export const formatMoney = (value: string): string => {
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 5,
-  }).format(numValue)
-}
+  }).format(numValue);
+};
 
 /**
  * Validate if a string is a valid money amount
@@ -25,22 +25,22 @@ export const formatMoney = (value: string): string => {
  */
 export const isValidMoneyAmount = (value: string): boolean => {
   if (!value || value.trim() === '') {
-    return false
+    return false;
   }
 
   // Match positive decimal numbers with optional decimal places
   // Must have digits after decimal point if decimal exists
-  const moneyRegex = /^\d+(\.\d+)?$/
+  const moneyRegex = /^\d+(\.\d+)?$/;
 
   if (!moneyRegex.test(value.trim())) {
-    return false
+    return false;
   }
 
-  const numValue = parseFloat(value)
+  const numValue = parseFloat(value);
 
   // Must be a valid number and positive
-  return !isNaN(numValue) && numValue > 0
-}
+  return !isNaN(numValue) && numValue > 0;
+};
 
 /**
  * Parse user input into a valid money string
@@ -49,20 +49,20 @@ export const isValidMoneyAmount = (value: string): boolean => {
  */
 export const parseMoneyInput = (input: string): string => {
   if (!input) {
-    return ''
+    return '';
   }
 
   // Remove any non-numeric characters except decimal point
-  const cleaned = input.replace(/[^\d.]/g, '')
+  const cleaned = input.replace(/[^\d.]/g, '');
 
   // Ensure only one decimal point
-  const parts = cleaned.split('.')
+  const parts = cleaned.split('.');
   if (parts.length > 2) {
-    return parts[0] + '.' + parts.slice(1).join('')
+    return parts[0] + '.' + parts.slice(1).join('');
   }
 
-  return cleaned
-}
+  return cleaned;
+};
 
 /**
  * Check if amount is greater than zero
@@ -70,9 +70,9 @@ export const parseMoneyInput = (input: string): string => {
  * @returns true if amount > 0
  */
 export const isPositiveAmount = (value: string): boolean => {
-  const numValue = parseFloat(value)
-  return !isNaN(numValue) && numValue > 0
-}
+  const numValue = parseFloat(value);
+  return !isNaN(numValue) && numValue > 0;
+};
 
 /**
  * Validate account ID
@@ -81,14 +81,14 @@ export const isPositiveAmount = (value: string): boolean => {
  */
 export const isValidAccountId = (value: string): boolean => {
   if (!value || value.trim() === '') {
-    return false
+    return false;
   }
 
   // Check if the string contains a decimal point - account IDs must be integers
   if (value.includes('.')) {
-    return false
+    return false;
   }
 
-  const numValue = parseInt(value, 10)
-  return !isNaN(numValue) && numValue > 0 && Number.isInteger(numValue)
-}
+  const numValue = parseInt(value, 10);
+  return !isNaN(numValue) && numValue > 0 && Number.isInteger(numValue);
+};

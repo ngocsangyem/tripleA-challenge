@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useForm } from 'vee-validate'
-import { toast } from 'vue-sonner'
-import { useAccountsStore } from '@/stores/accounts'
-import { required, accountId } from '@/shared/utils/validation'
-import { formatMoney } from '@/shared/utils'
-import { LoadingSpinner } from '@/shared/ui'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { ref } from 'vue';
+import { useForm } from 'vee-validate';
+import { toast } from 'vue-sonner';
+import { useAccountsStore } from '@/stores/accounts';
+import { required, accountId } from '@/shared/utils/validation';
+import { formatMoney } from '@/shared/utils';
+import { LoadingSpinner } from '@/shared/ui';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import {
   FormControl,
   FormField,
@@ -16,42 +16,42 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from '@/components/ui/form'
-import { Wallet } from 'lucide-vue-next'
-import { storeToRefs } from 'pinia'
-import type { Account } from '@/shared/types'
+} from '@/components/ui/form';
+import { Wallet } from 'lucide-vue-next';
+import { storeToRefs } from 'pinia';
+import type { Account } from '@/shared/types';
 
-const accountsStore = useAccountsStore()
-const { loading } = storeToRefs(accountsStore)
+const accountsStore = useAccountsStore();
+const { loading } = storeToRefs(accountsStore);
 
-const accountIdInputRef = ref<HTMLInputElement | null>(null)
-const account = ref<Account | null>(null)
+const accountIdInputRef = ref<HTMLInputElement | null>(null);
+const account = ref<Account | null>(null);
 
 const { defineField, handleSubmit } = useForm({
   validationSchema: {
     account_id: [required, accountId],
   },
-})
+});
 
-const [accountIdField, accountIdAttrs] = defineField('account_id')
+const [accountIdField, accountIdAttrs] = defineField('account_id');
 
 const onSubmit = handleSubmit(async (values) => {
-  account.value = null
+  account.value = null;
 
   try {
-    const result = await accountsStore.fetchAccountBalance(Number(values.account_id))
-    account.value = result
+    const result = await accountsStore.fetchAccountBalance(Number(values.account_id));
+    account.value = result;
 
     toast.success('Balance retrieved successfully', {
       description: `Account #${result.account_id}: ${formatMoney(result.balance)}`,
-    })
+    });
   } catch (err: unknown) {
-    account.value = null
+    account.value = null;
     toast.error('Failed to retrieve balance', {
       description: (err as Error).message || 'Account not found or an error occurred',
-    })
+    });
   }
-})
+});
 </script>
 
 <template>

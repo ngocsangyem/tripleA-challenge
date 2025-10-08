@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { CheckCircle2 } from 'lucide-vue-next'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle2 } from 'lucide-vue-next';
 
 type Props = {
-  title?: string
-  message: string
-}
+  title?: string;
+  message: string;
+};
 
 withDefaults(defineProps<Props>(), {
   title: 'Success',
-})
+});
 </script>
 
 <template>

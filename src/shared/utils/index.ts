@@ -8,6 +8,6 @@ export {
   parseMoneyInput,
   isPositiveAmount,
   isValidAccountId,
-} from './money'
+} from './money';
 
-export { required, moneyAmount, accountId, differentFrom } from './validation'
+export { required, moneyAmount, accountId, differentFrom } from './validation';

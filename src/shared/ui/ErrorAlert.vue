@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { AlertCircle } from 'lucide-vue-next'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { AlertCircle } from 'lucide-vue-next';
 
 type Props = {
-  title?: string
-  message: string
-  showRetry?: boolean
-}
+  title?: string;
+  message: string;
+  showRetry?: boolean;
+};
 
 withDefaults(defineProps<Props>(), {
   title: 'Error',
   showRetry: false,
-})
+});
 
 type Emits = {
-  (e: 'retry'): void
-}
+  (e: 'retry'): void;
+};
 
-const emit = defineEmits<Emits>()
+const emit = defineEmits<Emits>();
 
 const handleRetry = (): void => {
-  emit('retry')
-}
+  emit('retry');
+};
 </script>
 
 <template>

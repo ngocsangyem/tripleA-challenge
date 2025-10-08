@@ -1,9 +1,30 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components'
 import { TransferForm } from '@/features/transactions/components'
 import { Toaster } from '@/components/ui/sonner'
-import { Building2 } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Building2, UserPlus, ArrowRightLeft } from 'lucide-vue-next'
 import 'vue-sonner/style.css'
+
+const createAccountDialogOpen = ref(false)
+const transferDialogOpen = ref(false)
+
+const handleAccountCreated = () => {
+  createAccountDialogOpen.value = false
+}
+
+const handleTransferCompleted = () => {
+  transferDialogOpen.value = false
+}
 </script>
 
 <template>
@@ -12,42 +33,71 @@ import 'vue-sonner/style.css'
     <!-- Header -->
     <header class="border-b border-gray-200 bg-white shadow-sm">
       <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
-            <Building2 class="h-6 w-6 text-white" />
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
+              <Building2 class="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900">TripleA Financial</h1>
+              <p class="text-sm text-gray-600">Account Management & Transfers</p>
+            </div>
           </div>
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900">TripleA Financial</h1>
-            <p class="text-sm text-gray-600">Account Management & Transfers</p>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-3">
+            <!-- Create Account Dialog -->
+            <Dialog v-model:open="createAccountDialogOpen">
+              <DialogTrigger as-child>
+                <Button data-cy="open-create-account-dialog" variant="default" class="gap-2">
+                  <UserPlus class="h-4 w-4" />
+                  New Account
+                </Button>
+              </DialogTrigger>
+              <DialogContent class="sm:max-w-[500px]" data-cy="create-account-dialog">
+                <DialogHeader>
+                  <DialogTitle>Create New Account</DialogTitle>
+                  <DialogDescription>
+                    Set up a new account with an initial balance for transfers
+                  </DialogDescription>
+                </DialogHeader>
+                <CreateAccountForm @accountCreated="handleAccountCreated" />
+              </DialogContent>
+            </Dialog>
+
+            <!-- Transfer Funds Dialog -->
+            <Dialog v-model:open="transferDialogOpen">
+              <DialogTrigger as-child>
+                <Button data-cy="open-transfer-dialog" variant="default" class="gap-2">
+                  <ArrowRightLeft class="h-4 w-4" />
+                  Transfer Funds
+                </Button>
+              </DialogTrigger>
+              <DialogContent class="sm:max-w-[500px]" data-cy="transfer-dialog">
+                <DialogHeader>
+                  <DialogTitle>Transfer Funds</DialogTitle>
+                  <DialogDescription>
+                    Move money between your accounts
+                  </DialogDescription>
+                </DialogHeader>
+                <TransferForm @transferCompleted="handleTransferCompleted" />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8 space-y-12">
-      <!-- Account Management Section -->
+    <main class="container mx-auto px-4 py-8">
       <section>
-        <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Account Management</h2>
-          <p class="text-gray-600">Create accounts and check balances for internal transfers</p>
+        <div class="mb-8 text-center">
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Check Account Balance</h2>
+          <p class="text-gray-600">View the current balance of any account</p>
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:gap-8">
-          <CreateAccountForm />
+        <div class="max-w-xl mx-auto">
           <AccountBalanceViewer />
-        </div>
-      </section>
-
-      <!-- Transfers Section -->
-      <section>
-        <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Internal Transfers</h2>
-          <p class="text-gray-600">Transfer funds between your accounts</p>
-        </div>
-
-        <div class="max-w-2xl mx-auto">
-          <TransferForm />
         </div>
       </section>
     </main>

@@ -24,6 +24,10 @@ import {
   FormDescription,
 } from '@/components/ui/form'
 
+const emit = defineEmits<{
+  accountCreated: []
+}>()
+
 const accountIdInputRef = ref<HTMLInputElement | null>(null)
 
 // Auto-focus on first input when component mounts
@@ -61,6 +65,7 @@ const onSubmit = handleSubmit(async (values) => {
     })
 
     resetForm()
+    emit('accountCreated')
   } catch (err: any) {
     toast.error('Failed to create account', {
       description: err.message || 'An error occurred while creating the account',
@@ -73,26 +78,15 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <Card data-cy="create-account-form-card">
-    <CardHeader>
-      <CardTitle class="text-2xl">Create Account</CardTitle>
-      <CardDescription>Set up a new account with an initial balance</CardDescription>
-    </CardHeader>
-
     <CardContent>
       <form @submit="onSubmit" class="space-y-6">
         <FormField v-slot="{ componentField }" name="account_id">
           <FormItem>
             <FormLabel>Account ID</FormLabel>
             <FormControl>
-              <Input
-                ref="accountIdInputRef"
-                v-bind="{ ...componentField, ...accountIdAttrs }"
-                v-model="accountIdField"
-                type="text"
-                placeholder="e.g., 123"
-                :disabled="loading"
-                data-cy="create-account-form-account-id-input"
-              />
+              <Input ref="accountIdInputRef" v-bind="{ ...componentField, ...accountIdAttrs }" v-model="accountIdField"
+                type="text" placeholder="e.g., 123" :disabled="loading"
+                data-cy="create-account-form-account-id-input" />
             </FormControl>
             <FormDescription>Unique identifier for the account (positive integer)</FormDescription>
             <FormMessage />
@@ -103,14 +97,8 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Initial Balance</FormLabel>
             <FormControl>
-              <Input
-                v-bind="{ ...componentField, ...initialBalanceAttrs }"
-                v-model="initialBalanceField"
-                type="text"
-                placeholder="e.g., 1000.00"
-                :disabled="loading"
-                data-cy="create-account-form-initial-balance-input"
-              />
+              <Input v-bind="{ ...componentField, ...initialBalanceAttrs }" v-model="initialBalanceField" type="text"
+                placeholder="e.g., 1000.00" :disabled="loading" data-cy="create-account-form-initial-balance-input" />
             </FormControl>
             <FormDescription>Starting balance amount (decimal format)</FormDescription>
             <FormMessage />
@@ -120,7 +108,8 @@ const onSubmit = handleSubmit(async (values) => {
     </CardContent>
 
     <CardFooter>
-      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit" data-cy="create-account-form-submit-button">
+      <Button type="submit" :disabled="loading" class="w-full" @click="onSubmit"
+        data-cy="create-account-form-submit-button">
         <LoadingSpinner v-if="loading" class="mr-2 h-4 w-4" />
         <span v-else>Create Account</span>
       </Button>

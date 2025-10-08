@@ -10,11 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
-  CardDescription,
 } from '@/components/ui/card'
 import {
   FormControl,
@@ -24,7 +21,10 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form'
-import { ArrowRightLeft } from 'lucide-vue-next'
+
+const emit = defineEmits<{
+  transferCompleted: []
+}>()
 
 const sourceAccountInputRef = ref<HTMLInputElement | null>(null)
 
@@ -96,9 +96,10 @@ const onSubmit = handleSubmit(async (values) => {
     toast.success('Transfer completed successfully!', {
       description: `${formatMoney(transferDetails.amount)} transferred from Account #${transferDetails.source} to Account #${transferDetails.destination}`,
     })
-    
+
     // Reset form after successful transfer
     resetForm()
+    emit('transferCompleted')
   } catch (err: any) {
     toast.error('Transfer failed', {
       description: err.message || 'An error occurred while processing the transfer',
@@ -111,27 +112,15 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <Card data-cy="transfer-form-card">
-    <CardHeader>
-      <div class="flex items-center gap-3">
-        <div
-          class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-600">
-          <ArrowRightLeft class="h-6 w-6 text-white" />
-        </div>
-        <div>
-          <CardTitle class="text-2xl">Transfer Funds</CardTitle>
-          <CardDescription>Move money between accounts</CardDescription>
-        </div>
-      </div>
-    </CardHeader>
-
     <CardContent>
       <form @submit="onSubmit" class="space-y-6">
         <FormField v-slot="{ componentField }" name="source_account_id">
           <FormItem>
             <FormLabel>From Account</FormLabel>
             <FormControl>
-              <Input ref="sourceAccountInputRef" v-bind="{ ...componentField, ...sourceAccountAttrs }" v-model="sourceAccountField" type="text"
-                placeholder="e.g., 123" :disabled="loading" data-cy="transfer-form-source-account-input" />
+              <Input ref="sourceAccountInputRef" v-bind="{ ...componentField, ...sourceAccountAttrs }"
+                v-model="sourceAccountField" type="text" placeholder="e.g., 123" :disabled="loading"
+                data-cy="transfer-form-source-account-input" />
             </FormControl>
             <FormDescription>Account ID to transfer funds from</FormDescription>
             <FormMessage />
@@ -143,7 +132,8 @@ const onSubmit = handleSubmit(async (values) => {
             <FormLabel>To Account</FormLabel>
             <FormControl>
               <Input v-bind="{ ...componentField, ...destinationAccountAttrs }" v-model="destinationAccountField"
-                type="text" placeholder="e.g., 456" :disabled="loading" data-cy="transfer-form-destination-account-input" />
+                type="text" placeholder="e.g., 456" :disabled="loading"
+                data-cy="transfer-form-destination-account-input" />
             </FormControl>
             <FormDescription>Account ID to receive the funds</FormDescription>
             <FormMessage />

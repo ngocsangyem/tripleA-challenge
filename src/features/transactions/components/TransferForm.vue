@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from 'vee-validate'
+import { toast } from 'vue-sonner'
 import { executeTransfer } from '@/shared/api'
 import { required, accountId, moneyAmount } from '@/shared/utils/validation'
 import { formatMoney } from '@/shared/utils'
-import { LoadingSpinner, ErrorAlert } from '@/shared/ui'
+import { LoadingSpinner } from '@/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -21,13 +22,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
-import { ArrowRightLeft, CheckCircle2 } from 'lucide-vue-next'
+import { ArrowRightLeft } from 'lucide-vue-next'
+
+const sourceAccountInputRef = ref<HTMLInputElement | null>(null)
+
+// Auto-focus on first input when component mounts
+onMounted(() => {
+  setTimeout(() => {
+    sourceAccountInputRef.value?.focus()
+  }, 100)
+})
 
 const loading = ref(false)
-const error = ref<string | null>(null)
-const success = ref(false)
-const lastTransfer = ref<{ source: number; destination: number; amount: string } | null>(null)
 
 const { defineField, handleSubmit, resetForm } = useForm({
   validationSchema: {
@@ -61,13 +69,13 @@ const onSubmit = handleSubmit(async (values) => {
   // Additional validation for different accounts
   const differentAccountsCheck = validateDifferentAccounts()
   if (differentAccountsCheck !== true) {
-    error.value = differentAccountsCheck
+    toast.error('Validation error', {
+      description: differentAccountsCheck,
+    })
     return
   }
 
   loading.value = true
-  error.value = null
-  success.value = false
 
   // Save the transfer details BEFORE making API call and resetting form
   const transferDetails = {
@@ -83,20 +91,16 @@ const onSubmit = handleSubmit(async (values) => {
       amount: transferDetails.amount,
     })
 
-    // Set the saved transfer details for display
-    lastTransfer.value = transferDetails
-    success.value = true
+    toast.success('Transfer completed successfully!', {
+      description: `${formatMoney(transferDetails.amount)} transferred from Account #${transferDetails.source} to Account #${transferDetails.destination}`,
+    })
     
     // Reset form after successful transfer
     resetForm()
-
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-      success.value = false
-      lastTransfer.value = null
-    }, 5000)
   } catch (err: any) {
-    error.value = err.message || 'Failed to execute transfer'
+    toast.error('Transfer failed', {
+      description: err.message || 'An error occurred while processing the transfer',
+    })
   } finally {
     loading.value = false
   }
@@ -124,9 +128,10 @@ const onSubmit = handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>From Account</FormLabel>
             <FormControl>
-              <Input v-bind="{ ...componentField, ...sourceAccountAttrs }" v-model="sourceAccountField" type="text"
+              <Input ref="sourceAccountInputRef" v-bind="{ ...componentField, ...sourceAccountAttrs }" v-model="sourceAccountField" type="text"
                 placeholder="e.g., 123" :disabled="loading" />
             </FormControl>
+            <FormDescription>Account ID to transfer funds from</FormDescription>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -138,6 +143,7 @@ const onSubmit = handleSubmit(async (values) => {
               <Input v-bind="{ ...componentField, ...destinationAccountAttrs }" v-model="destinationAccountField"
                 type="text" placeholder="e.g., 456" :disabled="loading" />
             </FormControl>
+            <FormDescription>Account ID to receive the funds</FormDescription>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -149,32 +155,10 @@ const onSubmit = handleSubmit(async (values) => {
               <Input v-bind="{ ...componentField, ...amountAttrs }" v-model="amountField" type="text"
                 placeholder="e.g., 100.00" :disabled="loading" />
             </FormControl>
+            <FormDescription>Amount to transfer (decimal format)</FormDescription>
             <FormMessage />
           </FormItem>
         </FormField>
-
-        <ErrorAlert v-if="error" :message="error" />
-
-        <div v-if="success && lastTransfer" class="space-y-3 rounded-lg border border-green-200 bg-green-50 p-4">
-          <div class="flex items-center gap-2 text-green-800">
-            <CheckCircle2 class="h-5 w-5" />
-            <span class="font-medium">Transfer completed successfully!</span>
-          </div>
-          <div class="space-y-1 text-sm text-green-700">
-            <div class="flex justify-between">
-              <span class="text-gray-600">From:</span>
-              <span class="font-medium">Account #{{ lastTransfer.source }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">To:</span>
-              <span class="font-medium">Account #{{ lastTransfer.destination }}</span>
-            </div>
-            <div class="flex justify-between border-t border-green-200 pt-2">
-              <span class="text-gray-600">Amount:</span>
-              <span class="font-bold text-green-800">{{ formatMoney(lastTransfer.amount) }}</span>
-            </div>
-          </div>
-        </div>
       </form>
     </CardContent>
 

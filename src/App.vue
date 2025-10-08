@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { CreateAccountForm, AccountBalanceViewer } from '@/features/accounts/components'
 import { TransferForm } from '@/features/transactions/components'
+import { Toaster } from '@/components/ui/sonner'
 import { Building2 } from 'lucide-vue-next'
+import 'vue-sonner/style.css'
 </script>
 
 <template>
+  <Toaster position="top-right" richColors />
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
     <!-- Header -->
     <header class="border-b border-gray-200 bg-white shadow-sm">

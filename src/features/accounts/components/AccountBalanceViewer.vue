@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from 'vee-validate'
+import { toast } from 'vue-sonner'
 import { getAccountBalance } from '@/shared/api'
 import { required, accountId } from '@/shared/utils/validation'
 import { formatMoney } from '@/shared/utils'
-import { LoadingSpinner, ErrorAlert } from '@/shared/ui'
+import { LoadingSpinner } from '@/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,6 +14,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
+  CardDescription,
 } from '@/components/ui/card'
 import {
   FormControl,
@@ -20,12 +22,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Wallet } from 'lucide-vue-next'
 import type { Account } from '@/shared/types'
 
+const accountIdInputRef = ref<HTMLInputElement | null>(null)
+
 const loading = ref(false)
-const error = ref<string | null>(null)
 const account = ref<Account | null>(null)
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -38,15 +42,20 @@ const [accountIdField, accountIdAttrs] = defineField('account_id')
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
-  error.value = null
   account.value = null
 
   try {
     const result = await getAccountBalance(Number(values.account_id))
     account.value = result
+    
+    toast.success('Balance retrieved successfully', {
+      description: `Account #${result.account_id}: ${formatMoney(result.balance)}`,
+    })
   } catch (err: any) {
-    error.value = err.message || 'Failed to retrieve account balance'
     account.value = null
+    toast.error('Failed to retrieve balance', {
+      description: err.message || 'Account not found or an error occurred',
+    })
   } finally {
     loading.value = false
   }
@@ -57,6 +66,7 @@ const onSubmit = handleSubmit(async (values) => {
   <Card>
     <CardHeader>
       <CardTitle class="text-2xl">Check Balance</CardTitle>
+      <CardDescription>View the current balance of any account</CardDescription>
     </CardHeader>
 
     <CardContent>
@@ -66,6 +76,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormLabel>Account ID</FormLabel>
             <FormControl>
               <Input
+                ref="accountIdInputRef"
                 v-bind="{ ...componentField, ...accountIdAttrs }"
                 v-model="accountIdField"
                 type="text"
@@ -73,28 +84,36 @@ const onSubmit = handleSubmit(async (values) => {
                 :disabled="loading"
               />
             </FormControl>
+            <FormDescription>Enter an account ID to view its balance</FormDescription>
             <FormMessage />
           </FormItem>
         </FormField>
 
-        <ErrorAlert v-if="error" :message="error" />
-
-        <div
-          v-if="account"
-          class="rounded-lg border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6"
+        <Transition
+          enter-active-class="transition duration-300 ease-out"
+          enter-from-class="transform opacity-0 scale-95"
+          enter-to-class="transform opacity-100 scale-100"
+          leave-active-class="transition duration-200 ease-in"
+          leave-from-class="transform opacity-100 scale-100"
+          leave-to-class="transform opacity-0 scale-95"
         >
-          <div class="flex items-center gap-3 mb-2">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
-              <Wallet class="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <p class="text-sm font-medium text-gray-600">Account #{{ account.account_id }}</p>
-              <p class="text-3xl font-bold text-gray-900">
-                {{ formatMoney(account.balance) }}
-              </p>
+          <div
+            v-if="account"
+            class="rounded-lg border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 shadow-sm"
+          >
+            <div class="flex items-center gap-3 mb-2">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 shadow-md">
+                <Wallet class="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-600">Account #{{ account.account_id }}</p>
+                <p class="text-3xl font-bold text-gray-900">
+                  {{ formatMoney(account.balance) }}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </form>
     </CardContent>
 

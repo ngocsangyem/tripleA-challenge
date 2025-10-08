@@ -1,70 +1,266 @@
-# tripleA-challenge
+# TripleA challenge
 
-This template should help get you started developing with Vue 3 in Vite.
+## Features
 
-## Recommended IDE Setup
+- **Account Management**: Create accounts with initial balances
+- **Fund Transfers**: Transfer money between accounts with validation
+- **Form Validation**: Comprehensive input validation with vee-validate
+- **Modern UI**: Beautiful interface with shadcn-vue components
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Prerequisites
 
-## Recommended Browser Setup
+Before you begin, ensure you have the following installed:
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- **Node.js**: v20.19.0 or >=22.12.0
+- **pnpm**: v10.12.1 or higher
+- **Docker**: For running the API server
 
-## Type Support for `.vue` Imports in TS
+---
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Quick Start
 
-## Customize configuration
+### 1. Clone the Repository
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+git clone https://github.com/your-username/tripleA-challenge.git
+cd tripleA-challenge
 ```
 
-### Compile and Hot-Reload for Development
+### 2. Start the API Server (Important!)
 
-```sh
-npm run dev
+**Before running the application**, you need to start the backend API server using Docker:
+
+```bash
+docker run -p 8860:8860 tripleaio/transfer-api-server
 ```
 
-### Type-Check, Compile and Minify for Production
+> **⚠️ Important**: The API server must be running on port 8860 before starting the frontend application. Keep this terminal open while developing.
 
-```sh
-npm run build
+> **📝 Note**: If you see a port conflict, make sure port 8860 is not already in use. You can check with:
+> ```bash
+> # On macOS/Linux
+> lsof -i :8860
+> 
+> # On Windows
+> netstat -ano | findstr :8860
+> ```
+
+### 3. Install Dependencies
+
+```bash
+pnpm install
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### 4. Start Development Server
 
-```sh
-npm run test:unit
+```bash
+pnpm dev
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+The application will be available at [http://localhost:5173](http://localhost:5173)
 
-```sh
-npm run test:e2e:dev
+---
+
+## Project Structure
+
+```bash
+tripleA-challenge/
+│
+├── src/                          # Source code
+│   ├── __tests__/               # Unit tests
+│   │   └── App.spec.ts             # App component tests
+│   │
+│   ├── components/              # UI components
+│   │   └── ui/                  # shadcn-vue components
+│   │       ├── alert/              # Alert components
+│   │       ├── button/             # Button component
+│   │       ├── card/               # Card components
+│   │       ├── dialog/             # Dialog components
+│   │       ├── form/               # Form components
+│   │       ├── input/              # Input component
+│   │       ├── label/              # Label component
+│   │       └── sonner/             # Toast notifications
+│   │
+│   ├── features/                # Feature modules
+│   │   ├──accounts/           # Account management
+│   │   │   └──components/
+│   │   │       ├── CreateAccountForm.vue
+│   │   │       ├── AccountBalanceViewer.vue
+│   │   │       └── index.ts
+│   │   │
+│   │   └──transactions/       # Transaction management
+│   │       └── components/
+│   │           ├── TransferForm.vue
+│   │           └── index.ts
+│   │
+│   ├──shared/                  # Shared resources
+│   │   ├── api/                # API layer
+│   │   │   ├── client.ts          # Axios client
+│   │   │   ├── accounts.api.ts    # Account endpoints
+│   │   │   ├── transactions.api.ts # Transfer endpoints
+│   │   │   └── index.ts
+│   │   │
+│   │   ├── types/              # TypeScript types
+│   │   │   ├── account.ts         # Account types
+│   │   │   ├── transaction.ts     # Transaction types
+│   │   │   ├── api.ts             # API types
+│   │   │   └── index.ts
+│   │   │
+│   │   ├── ui/                 # Shared UI components
+│   │   │   ├── ErrorAlert.vue
+│   │   │   ├── LoadingSpinner.vue
+│   │   │   ├── SuccessToast.vue
+│   │   │   └── index.ts
+│   │   │
+│   │   └── utils/              # Utility functions
+│   │       ├── __tests__/
+│   │       │   ├── money.spec.ts
+│   │       │   └── validation.spec.ts
+│   │       ├── money.ts           # Money formatting/validation
+│   │       ├── validation.ts      # Form validation rules
+│   │       └── index.ts
+│   │
+│   ├── stores/                  # Pinia stores
+│   │   ├── accounts.ts            # Account state management
+│   │   ├── transactions.ts        # Transaction state management
+│   │   ├── ui.ts                  # UI state management
+│   │   └── index.ts
+│   │
+│   ├── router/                  # Vue Router
+│   │   └── index.ts
+│   │
+│   ├── lib/                     # Library utilities
+│   │   └── utils.ts               # Tailwind utilities
+│   │
+│   ├── App.vue                     # Root component
+│   ├── main.ts                     # Application entry point
+│   └── index.css                   # Global styles
+│
+├── cypress/                     # E2E tests
+│   ├── e2e/
+│   │   └── app-workflows.cy.ts    # E2E test scenarios
+│   ├── support/
+│   │   ├── commands.ts            # Custom Cypress commands
+│   │   └── e2e.ts
+│   └── fixtures/               # Test fixtures
+
+---
+
+## 🛠️ Available Scripts
+
+### Development
+
+```bash
+# Start development server with hot reload
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+### Testing
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+```bash
+# Run unit tests
+pnpm test:unit
 
-```sh
-npm run build
-npm run test:e2e
+# Run E2E tests (headless)
+pnpm test:e2e
+
+# Open Cypress E2E UI
+pnpm test:e2e:dev
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Code Quality
 
-```sh
-npm run lint
+```bash
+# Run linter (auto-fix enabled)
+pnpm lint
+
+# Run linter separately
+pnpm lint:eslint
+pnpm lint:oxlint
+
+# Format code with Prettier
+pnpm format
+
+# Type check
+pnpm type-check
 ```
+
+---
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory (optional):
+
+```env
+# API Base URL (default: /api)
+VITE_API_BASE_URL=http://localhost:8860/api
+```
+
+### Vite Proxy (Development)
+
+The application uses Vite proxy to avoid CORS issues during development:
+
+```typescript
+// vite.config.ts
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8860',
+      changeOrigin: true,
+    },
+  },
+}
+```
+
+---
+
+## Testing
+
+### Unit Tests (Vitest)
+
+```bash
+pnpm test:unit
+```
+
+### E2E Tests (Cypress)
+
+```bash
+# Headless mode
+pnpm test:e2e
+
+# Interactive mode
+pnpm test:e2e:dev
+```
+
+---
+
+## Tech Stack
+
+### Core
+- **Vue 3.5**: Progressive JavaScript framework
+- **TypeScript 5.9**: Type-safe JavaScript
+- **Vite 7**: Next-generation frontend tooling
+- **Pinia 3**: State management library
+
+### UI & Styling
+- **Tailwind CSS 4**: Utility-first CSS framework
+- **shadcn-vue**: High-quality UI components
+- **Reka UI**: Headless UI components
+- **Lucide Vue**: Icon library
+- **vue-sonner**: Toast notifications
+
+### Forms & Validation
+- **vee-validate**: Form validation
+- **@vee-validate/rules**: Validation rules
+
+### Utilities
+- **VueUse**: Collection of Vue composition utilities
+- **Axios**: HTTP client

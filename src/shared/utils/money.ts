@@ -29,6 +29,7 @@ export const isValidMoneyAmount = (value: string): boolean => {
   }
   
   // Match positive decimal numbers with optional decimal places
+  // Must have digits after decimal point if decimal exists
   const moneyRegex = /^\d+(\.\d+)?$/
   
   if (!moneyRegex.test(value.trim())) {
@@ -80,6 +81,11 @@ export const isPositiveAmount = (value: string): boolean => {
  */
 export const isValidAccountId = (value: string): boolean => {
   if (!value || value.trim() === '') {
+    return false
+  }
+  
+  // Check if the string contains a decimal point - account IDs must be integers
+  if (value.includes('.')) {
     return false
   }
   

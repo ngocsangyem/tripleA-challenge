@@ -28,32 +28,22 @@ git clone https://github.com/your-username/tripleA-challenge.git
 cd tripleA-challenge
 ```
 
-### 2. Start the API Server (Important!)
-
-**Before running the application**, you need to start the backend API server using Docker:
-
-```bash
-docker run -p 8860:8860 tripleaio/transfer-api-server
-```
-
-> **⚠️ Important**: The API server must be running on port 8860 before starting the frontend application. Keep this terminal open while developing.
-
-> **📝 Note**: If you see a port conflict, make sure port 8860 is not already in use. You can check with:
-> ```bash
-> # On macOS/Linux
-> lsof -i :8860
-> 
-> # On Windows
-> netstat -ano | findstr :8860
-> ```
-
-### 3. Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-### 4. Start Development Server
+> If you do not have pnpm cli. Please install it by following the command
+
+```bash
+npm install -g pnpm
+
+# Macos
+sudo npm install -g pnpm
+```
+
+### 3. Start Development Server
 
 ```bash
 pnpm dev
